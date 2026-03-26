@@ -90,10 +90,26 @@ Window {
                     Repeater {
                         model: ["Усі записи", "Генератор", "Налаштування"]
                         delegate: ItemDelegate {
+                            id: navItem
                             Layout.fillWidth: true
                             text: modelData
                             palette.text: index === 0 ? "white" : "#88898C"
-                            background: Rectangle { color: highlighted ? "rgba(255, 255, 255, 0.05)" : "transparent"; radius: 8 }
+                            
+                            background: Rectangle {
+                                id: navBg
+                                color: navItem.hovered ? "rgba(255, 255, 255, 0.05)" : "transparent"
+                                radius: 8
+                                
+                                Rectangle {
+                                    id: glow
+                                    width: 100; height: 100; radius: 50
+                                    color: "rgba(50, 121, 249, 0.1)"
+                                    visible: navItem.hovered
+                                    x: -50; y: -50 // Mockup magnetic offset logic
+                                }
+                            }
+                            
+                            Behavior on palette.text { ColorAnimation { duration: 200 } }
                         }
                     }
                 }

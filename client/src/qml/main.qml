@@ -114,14 +114,23 @@ Window {
                 anchors.margins: 24
                 Text { text: "Записи"; color: "white"; font.pixelSize: 24; font.weight: Font.Medium }
                 TextField {
+                    id: searchField
                     Layout.fillWidth: true; placeholderText: "Пошук..."
                     background: Rectangle { color: "#212226"; radius: 12 }
                 }
                 ListView {
+                    id: entryListView
                     Layout.fillHeight: true; Layout.fillWidth: true; spacing: 12
                     model: 3
                     delegate: Rectangle {
+                        id: entryDelegate
                         width: parent.width; height: 70; radius: 16; color: "#18191D"
+                        opacity: 0
+                        
+                        Component.onCompleted: OpacityAnimator {
+                            target: entryDelegate; from: 0; to: 1; duration: 400; easing.type: Easing.OutCubic
+                        }.start()
+
                         RowLayout {
                             anchors.fill: parent; anchors.margins: 16
                             Rectangle { width: 38; height: 38; radius: 10; color: "#2F3034"; Text { anchors.centerIn: parent; text: "G"; color: "#3279F9" } }
@@ -130,7 +139,13 @@ Window {
                                 Text { text: "user@gmail.com"; color: "#88898C"; font.pixelSize: 12 }
                             }
                         }
-                        MouseArea { anchors.fill: parent; onClicked: clipboard.setClipboardText("password123") }
+                        MouseArea { 
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: entryDelegate.color = "#212226"
+                            onExited: entryDelegate.color = "#18191D"
+                            onClicked: clipboard.setClipboardText("password123") 
+                        }
                     }
                 }
             }

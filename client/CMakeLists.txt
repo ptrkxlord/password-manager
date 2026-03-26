@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Sql)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Sql Network)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SODIUM REQUIRED libsodium)
 
@@ -21,6 +21,7 @@ qt_add_executable(ptkxlord
     src/domain/VaultManager.cpp
     src/domain/EntryService.cpp
     src/domain/PasswordGenerator.cpp
+    src/network/ApiClient.cpp
     src/qml.qrc
 )
 
@@ -32,6 +33,7 @@ target_link_libraries(ptkxlord PRIVATE
     Qt6::Qml
     Qt6::Quick
     Qt6::Sql
+    Qt6::Network
     ${SODIUM_LIBRARIES}
 )
 

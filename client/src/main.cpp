@@ -4,6 +4,7 @@
 #include "domain/VaultManager.h"
 #include "domain/EntryService.h"
 #include "domain/PasswordGenerator.h"
+#include "network/ApiClient.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,11 +16,13 @@ int main(int argc, char *argv[])
 
     VaultManager vaultManager;
     PasswordGenerator pwdGen;
+    ApiClient apiClient;
 
     QQmlApplicationEngine engine;
     
     engine.rootContext()->setContextProperty("vaultManager", &vaultManager);
     engine.rootContext()->setContextProperty("passwordGenerator", &pwdGen);
+    engine.rootContext()->setContextProperty("apiClient", &apiClient);
 
     const QUrl url(u"qrc:/qml/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

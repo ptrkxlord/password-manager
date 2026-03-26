@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  emailVerified Boolean        @default(false)
+  devices       Device[]
+  sessions      Session[]
+  backups       VaultBackup[]
+}
+
+model Device {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  deviceName  String
+  platform    String
+  lastSeenAt  DateTime      @default(now())
+  revoked     Boolean       @default(false)
+  sessions    Session[]
+  backups     VaultBackup[]
+}
+
+model Session {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  deviceId         String
+  device           Device   @relation(fields: [deviceId], references: [id])
+  refreshTokenHash String
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+}
+
+model VaultBackup {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  deviceId      String
+  device        Device   @relation(fields: [deviceId], references: [id])
+  encryptedBlob Bytes
+  version       Int      @default(1)
+  updatedAt     DateTime @updatedAt
+}

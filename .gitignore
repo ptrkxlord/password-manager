@@ -1,0 +1,22 @@
+# Node.js
+node_modules/
+dist/
+.env
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Qt / C++
+build/
+*.user
+*.pdb
+*.obj
+*.exe
+
+# Python
+__pycache__/
+*.pyc
+
+# Assets
+build_assets/

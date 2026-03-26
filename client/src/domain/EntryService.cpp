@@ -36,7 +36,11 @@ bool EntryService::addEntry(const QVariantMap &entry)
     query.bindValue(":notes", entry["notes"]);
     query.bindValue(":favorite", entry["favorite"].toInt());
 
-    return query.exec();
+    if (!query.exec()) {
+        qCritical() << "Помилка додавання запису:" << query.lastError().text();
+        return false;
+    }
+    return true;
 }
 
 bool EntryService::updateEntry(const QString &id, const QVariantMap &entry)
@@ -53,7 +57,11 @@ bool EntryService::updateEntry(const QString &id, const QVariantMap &entry)
     query.bindValue(":notes", entry["notes"]);
     query.bindValue(":favorite", entry["favorite"].toInt());
 
-    return query.exec();
+    if (!query.exec()) {
+        qCritical() << "Помилка оновлення запису:" << query.lastError().text();
+        return false;
+    }
+    return true;
 }
 
 bool EntryService::deleteEntry(const QString &id)
@@ -63,5 +71,10 @@ bool EntryService::deleteEntry(const QString &id)
     QSqlQuery query(m_dbManager->database());
     query.prepare("DELETE FROM entries WHERE id=:id");
     query.bindValue(":id", id);
-    return query.exec();
+    
+    if (!query.exec()) {
+        qCritical() << "Помилка видалення запису:" << query.lastError().text();
+        return false;
+    }
+    return true;
 }

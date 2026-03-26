@@ -60,8 +60,16 @@ Window {
         Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: 260
-            color: "rgba(24, 25, 29, 0.8)"
-            border.color: "rgba(255, 255, 255, 0.05)"
+            color: "rgba(24, 25, 29, 0.85)"
+            border.color: "rgba(255, 255, 255, 0.08)"
+            
+            // Premium background gradient
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1.0
+                brightness: 0.1
+            }
 
             ColumnLayout {
                 anchors.fill: parent

@@ -13,22 +13,24 @@ export class VaultService {
   }
 
   async saveBackup(userId: string, deviceId: string, encryptedBlob: Buffer) {
-    return this.prisma.vaultBackup.upsert({
-      where: {
-        // We'd ideally need a unique constraint on userId + deviceId in schema.prisma 
-        // to use a simple upsert here, but for now we find and update or create.
-        id: (await this.prisma.vaultBackup.findFirst({ where: { userId, deviceId } }))?.id || 'new-id',
-      },
-      update: {
-        encryptedBlob,
-        version: { increment: 1 },
-      },
-      create: {
-        userId,
-        deviceId,
-        encryptedBlob,
-        version: 1,
-      },
-    });
+    const existing = await this.prisma.vaultBackup.findFirst({ where: { userId, deviceId } });
+    if (existing) {
+      return this.prisma.vaultBackup.update({
+        where: { id: existing.id },
+        data: {
+          encryptedBlob,
+          version: { increment: 1 },
+        },
+      });
+    } else {
+      return this.prisma.vaultBackup.create({
+        data: {
+          userId,
+          deviceId,
+          encryptedBlob,
+          version: 1,
+        },
+      });
+    }
   }
 }

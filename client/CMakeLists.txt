@@ -21,6 +21,7 @@ qt_add_executable(ptkxlord
     src/domain/VaultManager.cpp
     src/domain/EntryService.cpp
     src/domain/PasswordGenerator.cpp
+    src/domain/ClipboardManager.cpp
     src/network/ApiClient.cpp
     src/qml.qrc
 )

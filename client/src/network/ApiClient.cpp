@@ -67,9 +67,10 @@ void ApiClient::onReplyFinished(QNetworkReply *reply)
         
         if (obj.contains("access_token")) {
             m_token = obj["access_token"].toString();
+            qDebug() << "Успішна авторизація. Токен отримано.";
             emit loginSuccess(m_token);
         } else {
-            // Success but no token (e.g. register)
+            qDebug() << "Запит успішний.";
             emit backupSuccess(); 
         }
     } else {

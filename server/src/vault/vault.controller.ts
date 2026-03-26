@@ -18,7 +18,7 @@ export class VaultController {
   async restore(@Request() req, @Body() body: { deviceId: string }) {
     const backup = await this.vaultService.getBackup(req.user.userId, body.deviceId);
     return {
-      blob: backup ? backup.encryptedBlob.toString('base64') : null,
+      blob: backup ? Buffer.from(backup.encryptedBlob).toString('base64') : null,
       version: backup ? backup.version : 0,
     };
   }

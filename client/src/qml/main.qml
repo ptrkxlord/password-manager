@@ -10,7 +10,6 @@ Window {
     visible: true
     title: qsTr("ptkxlord - Premium Password Manager")
     color: "#121317"
-    font.family: "Google Sans Flex"
 
     // API & Vault Connections
     Connections {
@@ -34,13 +33,21 @@ Window {
         }
     }
 
+    Connections {
+        target: authServer
+        function onTokenReceived(token) {
+            apiClient.setUserToken(token)
+            loginOverlay.visible = false
+        }
+    }
+
     // Background Glow
     Rectangle {
         anchors.fill: parent
         color: "transparent"
         Rectangle {
             width: 400; height: 400; radius: 200
-            color: "rgba(50, 121, 249, 0.05)"
+            color: "#0D3279F9" // 0.05 alpha
             x: parent.width * 0.7; y: -100; scale: 1.5
             SequentialAnimation on opacity {
                 loops: Animation.Infinite
@@ -50,18 +57,18 @@ Window {
         }
     }
 
-    // Main App Layout (Visible only when unlocked)
+    // Main App Layout (Visible only when unlocked or authenticated via browser)
     RowLayout {
         anchors.fill: parent
         spacing: 0
-        visible: !vaultManager.isLocked
+        visible: !loginOverlay.visible
 
         // Sidebar
         Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: 260
-            color: "rgba(24, 25, 29, 0.85)"
-            border.color: "rgba(255, 255, 255, 0.08)"
+            color: "#D918191D" // 0.85 alpha
+            border.color: "#14FFFFFF" // 0.08 alpha
             
             // Premium background gradient
             layer.enabled: true
@@ -97,13 +104,13 @@ Window {
                             
                             background: Rectangle {
                                 id: navBg
-                                color: navItem.hovered ? "rgba(255, 255, 255, 0.05)" : "transparent"
+                                color: navItem.hovered ? "#0DFFFFFF" : "transparent"
                                 radius: 8
                                 
                                 Rectangle {
                                     id: glow
                                     width: 100; height: 100; radius: 50
-                                    color: "rgba(50, 121, 249, 0.1)"
+                                    color: "#1A3279F9" // 0.1 alpha
                                     visible: navItem.hovered
                                     x: -50; y: -50 // Mockup magnetic offset logic
                                 }
@@ -131,7 +138,7 @@ Window {
             Layout.fillHeight: true
             Layout.preferredWidth: 340
             color: "transparent"
-            border.color: "rgba(255, 255, 255, 0.03)"
+            border.color: "#08FFFFFF" // 0.03 alpha
 
             ColumnLayout {
                 anchors.fill: parent
@@ -151,9 +158,16 @@ Window {
                         width: parent.width; height: 70; radius: 16; color: "#18191D"
                         opacity: 0
                         
-                        Component.onCompleted: OpacityAnimator {
-                            target: entryDelegate; from: 0; to: 1; duration: 400; easing.type: Easing.OutCubic
-                        }.start()
+                        Component.onCompleted: entryAnimator.start()
+                        
+                        OpacityAnimator {
+                            id: entryAnimator
+                            target: entryDelegate
+                            from: 0
+                            to: 1
+                            duration: 400
+                            easing.type: Easing.OutCubic
+                        }
 
                         RowLayout {
                             anchors.fill: parent; anchors.margins: 16
@@ -185,7 +199,7 @@ Window {
     Rectangle {
         id: loginOverlay
         anchors.fill: parent
-        color: "rgba(18, 19, 23, 0.9)"
+        color: "#E6121317" // 0.9 alpha
         visible: vaultManager.isLocked
 
         ColumnLayout {
@@ -220,6 +234,18 @@ Window {
                 Layout.fillWidth: true; text: "Створити нове сховище"
                 flat: true; onClicked: vaultManager.createVault("vault.db", passInput.text)
                 contentItem: Text { text: parent.text; color: "#88898C"; horizontalAlignment: Text.AlignHCenter }
+            }
+
+            Rectangle { Layout.fillWidth: true; height: 1; color: "#0DFFFFFF" }
+
+            Button {
+                Layout.fillWidth: true; text: "Увійти через браузер"
+                onClicked: {
+                    authServer.startServer(5050)
+                    Qt.openUrlExternally("http://localhost:5173")
+                }
+                background: Rectangle { color: "#1A3279F9"; radius: 12; border.color: "#4D3279F9" }
+                contentItem: Text { text: parent.text; color: "#3279F9"; horizontalAlignment: Text.AlignHCenter; font.weight: Font.Medium }
             }
         }
     }

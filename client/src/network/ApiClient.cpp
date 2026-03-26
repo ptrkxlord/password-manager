@@ -35,6 +35,12 @@ void ApiClient::registerUser(const QString &email, const QString &passwordHash)
     connect(reply, &QNetworkReply::finished, this, [this, reply]() { onReplyFinished(reply); });
 }
 
+void ApiClient::setUserToken(const QString &token)
+{
+    m_token = token;
+    emit loginSuccess(m_token);
+}
+
 void ApiClient::backupVault(const QString &deviceId, const QByteArray &blob)
 {
     if (m_token.isEmpty()) return;

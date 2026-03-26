@@ -1,9 +1,9 @@
-#ifndef CRYPTOMANAGER_H
+                                                                                                                                                                        #ifndef CRYPTOMANAGER_H
 #define CRYPTOMANAGER_H
 
 #include <QObject>
 #include <QByteArray>
-#include <libsodium.h>
+#include <sodium.h>
 
 class CryptoManager : public QObject
 {

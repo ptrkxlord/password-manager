@@ -3,6 +3,14 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  constructor() {
+    // Attempting to pass a valid options object as required by Prisma 7.5.0
+    super({
+      errorFormat: 'pretty',
+      log: ['query', 'info', 'warn', 'error'],
+    });
+  }
+
   async onModuleInit() {
     await this.$connect();
   }

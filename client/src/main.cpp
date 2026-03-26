@@ -5,11 +5,17 @@
 #include "domain/EntryService.h"
 #include "domain/PasswordGenerator.h"
 #include "network/ApiClient.h"
+#include "network/AuthCallbackServer.h"
 #include "domain/ClipboardManager.h"
+
+#include <QQuickStyle>
 
 int main(int argc, char *argv[])
 {
+    QQuickStyle::setStyle("Basic");
     QGuiApplication app(argc, argv);
+    
+    AuthCallbackServer authServer;
 
     app.setOrganizationName("ptkxlord");
     app.setOrganizationDomain("ptkxlord.com");
@@ -26,8 +32,9 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("passwordGenerator", &pwdGen);
     engine.rootContext()->setContextProperty("apiClient", &apiClient);
     engine.rootContext()->setContextProperty("clipboard", &clipboardManager);
+    engine.rootContext()->setContextProperty("authServer", &authServer);
 
-    const QUrl url(u"qrc:/qml/main.qml"_qs);
+    const QUrl url(u"qrc:/ptkxlord/src/qml/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

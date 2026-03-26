@@ -15,6 +15,7 @@ public:
 
     Q_INVOKABLE void login(const QString &email, const QString &passwordHash);
     Q_INVOKABLE void registerUser(const QString &email, const QString &passwordHash);
+    Q_INVOKABLE void setUserToken(const QString &token);
     Q_INVOKABLE void backupVault(const QString &deviceId, const QByteArray &blob);
 
 signals:

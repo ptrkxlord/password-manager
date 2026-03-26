@@ -1,5 +1,5 @@
 #include "KeyDerivationService.h"
-#include <libsodium.h>
+#include <sodium.h>
 
 KeyDerivationService::KeyDerivationService(QObject *parent) : QObject(parent) {}
 

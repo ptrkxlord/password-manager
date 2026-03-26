@@ -14,11 +14,15 @@ export class VaultService {
 
   async saveBackup(userId: string, deviceId: string, encryptedBlob: Buffer) {
     const existing = await this.prisma.vaultBackup.findFirst({ where: { userId, deviceId } });
+    
+    // Convert Buffer to Uint8Array for Prisma 7 compatibility
+    const blobData = new Uint8Array(encryptedBlob);
+
     if (existing) {
       return this.prisma.vaultBackup.update({
         where: { id: existing.id },
         data: {
-          encryptedBlob,
+          encryptedBlob: blobData,
           version: { increment: 1 },
         },
       });
@@ -27,7 +31,7 @@ export class VaultService {
         data: {
           userId,
           deviceId,
-          encryptedBlob,
+          encryptedBlob: blobData,
           version: 1,
         },
       });
